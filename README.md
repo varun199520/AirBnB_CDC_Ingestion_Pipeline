@@ -28,34 +28,7 @@ This pipeline solves these challenges using:
 | Efficient data sync | Upsert operations (no full reloads) |
 | Automated processing | ADF pipelines with scheduled/event triggers |
 
-## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        Azure Data Factory Orchestration                     │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌──────────────┐                              ┌───────────────────────────┐│
-│  │    ADLS      │     Hourly Trigger           │    Azure Synapse          ││
-│  │ (Customer    │─────────────────────────────►│    Analytics              ││
-│  │  CSV files)  │     SCD-1 Merge              │                           ││
-│  └──────────────┘                              │  ┌─────────────────────┐  ││
-│                                                │  │   customer_dim      │  ││
-│                                                │  │   (Dimension)       │  ││
-│  ┌──────────────┐                              │  └─────────────────────┘  ││
-│  │  CosmosDB    │     Change Feed Trigger      │                           ││
-│  │ (Bookings    │─────────────────────────────►│  ┌─────────────────────┐  ││
-│  │  Container)  │     Transform + Upsert       │  │   bookings_fact     │  ││
-│  └──────────────┘                              │  │   (Fact)            │  ││
-│                                                │  └─────────────────────┘  ││
-│                                                │                           ││
-│                                                │  ┌─────────────────────┐  ││
-│                                                │  │ BookingCustomer     │  ││
-│                                                │  │ Aggregation         │  ││
-│                                                │  └─────────────────────┘  ││
-│                                                └───────────────────────────┘│
-└─────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Tech Stack
 
